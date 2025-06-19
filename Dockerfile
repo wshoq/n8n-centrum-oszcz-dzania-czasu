@@ -1,11 +1,14 @@
-FROM n8nio/n8n:latest
+FROM node:18-slim
 
-USER root
+# Instalacja zależności
+RUN apt-get update && \
+    apt-get install -y nginx supervisor curl gnupg && \
+    apt-get clean
 
-# Zainstaluj nginx i supervisor
-RUN apt-get update && apt-get install -y nginx supervisor
+# Instalacja n8n (najstabilniejsza wersja)
+RUN npm install --global n8n
 
-# Skopiuj pliki HTML (np. google*.html) do katalogu nginx
+# Skopiuj pliki HTML (Google Verification) do nginx
 COPY ./public /usr/share/nginx/html
 
 # Skopiuj konfigurację nginx
@@ -14,5 +17,11 @@ COPY nginx.conf /etc/nginx/nginx.conf
 # Skopiuj konfigurację supervisora
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Uruchom supervisor, który wystartuje nginx + n8n
+# Ustaw working directory
+WORKDIR /data
+
+# Ustaw port na który nasłuchuje nginx
+EXPOSE 80
+
+# Start nginx + n8n
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

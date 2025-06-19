@@ -2,14 +2,17 @@ FROM n8nio/n8n:latest
 
 USER root
 
-# Zainstaluj nginx
-RUN apt-get update && apt-get install -y nginx
+# Zainstaluj nginx i supervisor
+RUN apt-get update && apt-get install -y nginx supervisor
 
-# Skopiuj pliki weryfikacyjne (np. google*.html) do nginx
+# Skopiuj pliki HTML (Google Verification) do katalogu nginx
 COPY ./public /usr/share/nginx/html
 
 # Skopiuj konfigurację nginx
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Uruchom nginx + n8n razem
-CMD service nginx start && n8n start
+# Skopiuj konfigurację supervisora
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Uruchom supervisor, który wystartuje nginx + n8n
+CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

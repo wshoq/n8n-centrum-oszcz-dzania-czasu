@@ -26,6 +26,10 @@ services:
           name: n8n-db
           property: user
 
-databases:
-  - name: n8n-db
-    plan: free
+      # TO DODAJ:
+      - key: N8N_HOST
+        value: 127.0.0.1
+      - key: N8N_PORT
+        value: 5678
+      - key: WEBHOOK_TUNNEL_URL
+        value: https://n8n-service-rtdq.onrender.com

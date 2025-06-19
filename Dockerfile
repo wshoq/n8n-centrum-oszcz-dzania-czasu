@@ -5,7 +5,7 @@ USER root
 # Zainstaluj nginx i supervisor
 RUN apt-get update && apt-get install -y nginx supervisor
 
-# Skopiuj pliki HTML (np. google*.html) do katalogu nginx
+# Skopiuj pliki HTML (Google Verification) do katalogu nginx
 COPY ./public /usr/share/nginx/html
 
 # Skopiuj konfigurację nginx
